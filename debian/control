@@ -1,0 +1,21 @@
+Source: mint-hub
+Section: utils
+Priority: optional
+Maintainer: SkinVaults <drmizayt@gmail.com>
+Build-Depends: debhelper (>= 12)
+Standards-Version: 4.5.0
+Homepage: https://github.com/soccervortex/mint-hub
+
+Package: mint-hub
+Architecture: all
+Depends: python3 (>= 3.8),
+         python3-gi,
+         python3-requests,
+         gir1.2-gtk-3.0,
+         gir1.2-xapp-1.0,
+         ${misc:Depends}
+Description: Enhancement Hub for Linux Mint
+ Linux Mint Hub is a native GTK3 desktop application for browsing,
+ installing, and managing Linux Mint enhancements including themes,
+ icons, cursors, wallpapers, applets, extensions, desklets, fonts,
+ and more.

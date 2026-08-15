@@ -1,0 +1,419 @@
+[
+  {
+    "slug": "mint-y-dark",
+    "name": "Mint-Y-Dark",
+    "category": "gtk-theme",
+    "version": "2.0.0",
+    "author": "Linux Mint Team",
+    "summary": "The official dark GTK theme for Linux Mint — modern, elegant, and easy on the eyes.",
+    "description": "Mint-Y-Dark is the flagship dark theme included with Linux Mint. It features a clean, modern design with excellent contrast and readability. Supports GTK 3 and Cinnamon natively.",
+    "tags": ["dark", "official", "modern", "mint-y"],
+    "license": "GPL-3.0",
+    "featured": true
+  },
+  {
+    "slug": "mint-y-aqua",
+    "name": "Mint-Y-Aqua",
+    "category": "gtk-theme",
+    "version": "2.0.0",
+    "author": "Linux Mint Team",
+    "summary": "A fresh aqua-accented variant of the Mint-Y theme family.",
+    "description": "Mint-Y-Aqua brings a refreshing teal accent to the Mint-Y theme. Perfect for users who want a splash of color with the reliability of Mint-Y.",
+    "tags": ["aqua", "official", "modern", "mint-y"],
+    "license": "GPL-3.0"
+  },
+  {
+    "slug": "arc-dark-theme",
+    "name": "Arc Dark",
+    "category": "gtk-theme",
+    "version": "20221218",
+    "author": "horst3180",
+    "summary": "A flat, transparent GTK theme with dark elements — one of the most popular Linux themes ever.",
+    "description": "Arc Dark is a flat theme with transparent elements designed for GTK 3, GTK 2, GNOME Shell, and Cinnamon. It uses a dark color palette with blue accents.",
+    "tags": ["dark", "flat", "transparent", "arc", "popular"],
+    "license": "GPL-3.0",
+    "featured": true
+  },
+  {
+    "slug": "dracula-gtk",
+    "name": "Dracula",
+    "category": "gtk-theme",
+    "version": "4.0.0",
+    "author": "Dracula Theme",
+    "summary": "The famous Dracula color scheme as a full GTK theme — dark purple with vivid accents.",
+    "description": "A dark theme based on the Dracula color palette. Features purple backgrounds with pink, green, cyan, and orange accents. Consistent with the Dracula ecosystem across 200+ apps.",
+    "tags": ["dark", "dracula", "purple", "popular"],
+    "license": "MIT",
+    "featured": true
+  },
+  {
+    "slug": "catppuccin-mocha-gtk",
+    "name": "Catppuccin Mocha",
+    "category": "gtk-theme",
+    "version": "1.0.0",
+    "author": "Catppuccin",
+    "summary": "A soothing pastel dark theme — warm tones that are easy on the eyes for long sessions.",
+    "description": "Catppuccin Mocha is the darkest flavor of the Catppuccin theme. It uses warm, muted colors with excellent contrast. Part of the Catppuccin ecosystem with matching icon themes, cursors, and terminal configs.",
+    "tags": ["dark", "catppuccin", "pastel", "warm"],
+    "license": "MIT"
+  },
+  {
+    "slug": "nordic-gtk",
+    "name": "Nordic",
+    "category": "gtk-theme",
+    "version": "2.2.0",
+    "author": "EliverLara",
+    "summary": "A dark, cool-toned GTK theme inspired by the Nord color palette.",
+    "description": "Nordic brings the beautiful Nord color palette to your GTK desktop. Cool blues and grays create a calm, focused workspace. Supports GTK 3, GTK 2, and Cinnamon.",
+    "tags": ["dark", "nordic", "nord", "blue", "cool"],
+    "license": "GPL-3.0"
+  },
+
+  {
+    "slug": "mint-y-dark-cinnamon",
+    "name": "Mint-Y-Dark",
+    "category": "cinnamon-theme",
+    "version": "2.0.0",
+    "author": "Linux Mint Team",
+    "summary": "The official dark Cinnamon shell theme — matches the Mint-Y-Dark GTK theme.",
+    "description": "The Cinnamon desktop shell companion to Mint-Y-Dark. Provides a consistent dark experience across the panel, menus, and window borders.",
+    "tags": ["dark", "official", "mint-y"],
+    "license": "GPL-3.0",
+    "featured": true
+  },
+  {
+    "slug": "dracula-cinnamon",
+    "name": "Dracula Cinnamon",
+    "category": "cinnamon-theme",
+    "version": "2.0.0",
+    "author": "Dracula Theme",
+    "summary": "Dracula color scheme for the Cinnamon desktop shell.",
+    "description": "A Cinnamon theme based on the Dracula color palette. Dark purple panels with vivid accent colors for an immersive Dracula experience.",
+    "tags": ["dark", "dracula", "purple"],
+    "license": "MIT"
+  },
+  {
+    "slug": "catppuccin-cinnamon",
+    "name": "Catppuccin Cinnamon",
+    "category": "cinnamon-theme",
+    "version": "1.0.0",
+    "author": "Catppuccin",
+    "summary": "Catppuccin pastel colors for the Cinnamon shell — warm and cozy.",
+    "description": "The Catppuccin Mocha flavor adapted for the Cinnamon desktop shell. Warm pastel colors throughout the panel, menus, and notifications.",
+    "tags": ["dark", "catppuccin", "pastel"],
+    "license": "MIT"
+  },
+
+  {
+    "slug": "papirus-icons",
+    "name": "Papirus",
+    "category": "icon-theme",
+    "version": "20230301",
+    "author": "PapirusDevelopmentTeam",
+    "summary": "The most popular icon theme for Linux — thousands of crisp SVG icons in Material Design style.",
+    "description": "Papirus is a free and open-source SVG icon theme based on Paper Icon Set with a lot of new icons and a few extras like hardcoded tray icons, Steam icons, and more. Available in multiple color variants.",
+    "tags": ["material", "svg", "popular", "papirus"],
+    "license": "GPL-3.0",
+    "featured": true
+  },
+  {
+    "slug": "mint-y-icons",
+    "name": "Mint-Y Icons",
+    "category": "icon-theme",
+    "version": "2.0.0",
+    "author": "Linux Mint Team",
+    "summary": "The official icon theme for Linux Mint — clean, colorful, and complete.",
+    "description": "Mint-Y icons are the default icons shipping with Linux Mint. A comprehensive set covering thousands of applications and file types.",
+    "tags": ["official", "mint-y", "colorful"],
+    "license": "GPL-3.0"
+  },
+  {
+    "slug": "tela-icons",
+    "name": "Tela",
+    "category": "icon-theme",
+    "version": "2023.06.01",
+    "author": "vinceliuice",
+    "summary": "A flat, colorful icon theme inspired by Material Design with 10 color variants.",
+    "description": "Tela icon theme is a flat, colorful design for Linux desktops. It supports most popular applications and comes in 10 different accent colors including blue, green, orange, pink, and more.",
+    "tags": ["flat", "material", "colorful", "tela"],
+    "license": "GPL-3.0"
+  },
+  {
+    "slug": "candy-icons",
+    "name": "Candy Icons",
+    "category": "icon-theme",
+    "version": "1.0.0",
+    "author": "EliverLara",
+    "summary": "Sweet, gradient-filled icons with vibrant colors and a playful personality.",
+    "description": "Candy icons bring a burst of color to your desktop with gradient-filled designs. Each icon features smooth gradients and rounded shapes for a fun, modern look.",
+    "tags": ["gradient", "colorful", "fun", "candy"],
+    "license": "GPL-3.0"
+  },
+
+  {
+    "slug": "bibata-modern-classic",
+    "name": "Bibata Modern Classic",
+    "category": "cursor-theme",
+    "version": "2.0.3",
+    "author": "ful1e5",
+    "summary": "A sleek, modern cursor theme — the most popular cursor on Linux.",
+    "description": "Bibata Modern Classic features clean, sharp cursor designs with smooth animations. Available in multiple colors and sizes. The most downloaded cursor theme on GNOME Look.",
+    "tags": ["modern", "popular", "bibata", "animated"],
+    "license": "GPL-3.0",
+    "featured": true
+  },
+  {
+    "slug": "catppuccin-cursors-mocha",
+    "name": "Catppuccin Cursors Mocha",
+    "category": "cursor-theme",
+    "version": "0.2.0",
+    "author": "Catppuccin",
+    "summary": "Cursor theme in Catppuccin Mocha colors — matches the Catppuccin ecosystem.",
+    "description": "A cursor theme designed to match the Catppuccin Mocha color palette. Warm pastel tones for a consistent look across your entire desktop.",
+    "tags": ["catppuccin", "pastel", "mocha"],
+    "license": "GPL-3.0"
+  },
+  {
+    "slug": "oreo-blue-cursors",
+    "name": "Oreo Blue Cursors",
+    "category": "cursor-theme",
+    "version": "2.0.0",
+    "author": "varlesh",
+    "summary": "A clean, minimal cursor set with a blue accent — crisp at any size.",
+    "description": "Oreo cursors feature a minimal black and white design with a vibrant blue accent. Sharp at all sizes with a complete set of cursor states.",
+    "tags": ["minimal", "blue", "clean", "oreo"],
+    "license": "GPL-3.0"
+  },
+
+  {
+    "slug": "mint-backgrounds-wilma",
+    "name": "Linux Mint 22 Wallpapers",
+    "category": "wallpaper-pack",
+    "version": "22.0",
+    "author": "Linux Mint Team",
+    "summary": "Official wallpaper collection from Linux Mint 22 Wilma — 20 curated nature and abstract images.",
+    "description": "The official wallpaper set shipping with Linux Mint 22 Wilma. Features landscapes, abstract art, and nature photography in 4K resolution.",
+    "tags": ["official", "mint-22", "4k", "nature"],
+    "license": "CC-BY-4.0",
+    "featured": true
+  },
+  {
+    "slug": "dracula-wallpapers",
+    "name": "Dracula Wallpapers",
+    "category": "wallpaper-pack",
+    "version": "1.0.0",
+    "author": "Dracula Theme",
+    "summary": "Dark wallpapers in the Dracula color palette — perfect match for Dracula theme users.",
+    "description": "A collection of wallpapers designed around the Dracula color palette. Dark purples, cyans, and pinks create a cohesive atmosphere with the Dracula GTK and icon themes.",
+    "tags": ["dark", "dracula", "purple"],
+    "license": "MIT"
+  },
+  {
+    "slug": "catppuccin-wallpapers",
+    "name": "Catppuccin Wallpapers",
+    "category": "wallpaper-pack",
+    "version": "1.0.0",
+    "author": "Catppuccin",
+    "summary": "Soothing wallpapers in the Catppuccin palette — 4 flavors, dozens of designs.",
+    "description": "A curated set of wallpapers using the Catppuccin color palette. Available in Latte, Frappe, Macchiato, and Mocha variants to match your theme flavor.",
+    "tags": ["catppuccin", "pastel", "soothing"],
+    "license": "MIT"
+  },
+
+  {
+    "slug": "iosevka-nerd-font",
+    "name": "Iosevka Nerd Font",
+    "category": "font",
+    "version": "3.1.1",
+    "author": "ryanoasis",
+    "summary": "A slender, customizable monospace font patched with thousands of dev icons.",
+    "description": "Iosevka is a slender monospace font designed for terminal and code editor use. This Nerd Font patched version includes glyphs from Font Awesome, Devicons, Octicons, and more.",
+    "tags": ["monospace", "nerd-font", "coding", "terminal"],
+    "license": "OFL-1.1",
+    "featured": true
+  },
+  {
+    "slug": "jetbrains-mono",
+    "name": "JetBrains Mono",
+    "category": "font",
+    "version": "2.304",
+    "author": "JetBrains",
+    "summary": "A free monospace font designed for developers — with ligatures and excellent readability.",
+    "description": "JetBrains Mono is a typeface made for developers. It has increased letter height for a better reading experience and 138 code ligatures for cleaner code display.",
+    "tags": ["monospace", "coding", "ligatures", "jetbrains"],
+    "license": "OFL-1.1"
+  },
+  {
+    "slug": "fira-code",
+    "name": "Fira Code",
+    "category": "font",
+    "version": "6.2",
+    "author": "tonsky",
+    "summary": "A monospace font with programming ligatures — one of the most loved coding fonts.",
+    "description": "Fira Code is a monospaced font extended with programming ligatures. It turns multi-character sequences like => and != into single glyphs for cleaner code.",
+    "tags": ["monospace", "coding", "ligatures", "popular"],
+    "license": "OFL-1.1"
+  },
+  {
+    "slug": "inter-font",
+    "name": "Inter",
+    "category": "font",
+    "version": "4.0",
+    "author": "Rasmus Andersson",
+    "summary": "A professional sans-serif font family optimized for screens and user interfaces.",
+    "description": "Inter is a typeface carefully crafted and designed for computer screens. Features include adjustable tracking, tabular numbers, contextual alternates, and many OpenType features.",
+    "tags": ["sans-serif", "ui", "professional", "screen"],
+    "license": "OFL-1.1"
+  },
+
+  {
+    "slug": "yaru-sounds",
+    "name": "Yaru Sounds",
+    "category": "sound-theme",
+    "version": "22.04",
+    "author": "Ubuntu Design Team",
+    "summary": "The clean, modern sound theme from Ubuntu — subtle and professional notification sounds.",
+    "description": "Yaru is Ubuntu's default sound theme featuring calm, professional sounds for notifications, alerts, and system events. Clean and minimal design that doesn't distract.",
+    "tags": ["ubuntu", "minimal", "professional"],
+    "license": "CC-BY-SA-4.0"
+  },
+  {
+    "slug": "freedesktop-sounds",
+    "name": "Freedesktop Sounds",
+    "category": "sound-theme",
+    "version": "0.8",
+    "author": "freedesktop.org",
+    "summary": "The standard Linux desktop sound theme — subtle, neutral notification sounds.",
+    "description": "The freedesktop.org reference sound theme. A complete set of sounds for all standard desktop events.",
+    "tags": ["standard", "freedesktop", "neutral"],
+    "license": "CC-BY-SA-3.0"
+  },
+
+  {
+    "slug": "conky-manager-theme-pack",
+    "name": "Conky Theme Pack",
+    "category": "conky",
+    "version": "1.0.0",
+    "author": "Community",
+    "summary": "A curated collection of 20 beautiful Conky desktop widget configs.",
+    "description": "A starter pack of Conky desktop widget configurations. Includes system monitors, clocks, weather widgets, and network monitors in various styles from minimal to detailed.",
+    "tags": ["conky", "widgets", "system-monitor", "collection"],
+    "license": "GPL-3.0"
+  },
+  {
+    "slug": "conky-gotham",
+    "name": "Conky Gotham",
+    "category": "conky",
+    "version": "1.2.0",
+    "author": "helmuthdu",
+    "summary": "A dark, elegant Conky config showing system stats with a Batman-inspired aesthetic.",
+    "description": "Conky Gotham displays CPU, RAM, disk, network, and process information in a sleek dark layout. Inspired by the Gotham city aesthetic.",
+    "tags": ["conky", "dark", "system-monitor"],
+    "license": "GPL-3.0"
+  },
+
+  {
+    "slug": "always-on",
+    "name": "Always On",
+    "category": "fix",
+    "version": "1.0.0",
+    "author": "Community",
+    "summary": "Prevent your PC or laptop from sleeping, turning off the screen, or blanking — keep it always on.",
+    "description": "Always On disables all power management features that can interrupt your session. It prevents automatic screen blanking, screen dimming, display power-off timers, suspend, hibernate, and idle sleep. Perfect for presentations, downloads, long-running tasks, or kiosk setups. One click to activate, one click to restore your original power settings.",
+    "tags": ["always-on", "no-sleep", "screen", "power", "presentation", "kiosk"],
+    "license": "GPL-3.0",
+    "featured": true
+  },
+  {
+    "slug": "mint-tweaks-battery",
+    "name": "Battery Optimizer",
+    "category": "fix",
+    "version": "1.0.0",
+    "author": "Community",
+    "summary": "TLP-based battery optimization preset for Linux Mint laptops — extend battery life instantly.",
+    "description": "Installs and configures TLP with optimized settings for Linux Mint laptops. Reduces power consumption by tuning CPU governors, USB autosuspend, and disk APM levels.",
+    "tags": ["battery", "laptop", "tlp", "power"],
+    "license": "GPL-3.0"
+  },
+  {
+    "slug": "mint-nvidia-fix",
+    "name": "NVIDIA Driver Helper",
+    "category": "fix",
+    "version": "1.0.0",
+    "author": "Community",
+    "summary": "Automatically detect and fix common NVIDIA driver issues on Linux Mint.",
+    "description": "Scans for common NVIDIA driver problems (wrong driver version, missing kernel modules, Wayland conflicts) and applies the recommended fixes.",
+    "tags": ["nvidia", "driver", "gpu", "fix"],
+    "license": "GPL-3.0"
+  },
+
+  {
+    "slug": "backup-home",
+    "name": "Home Backup Script",
+    "category": "script",
+    "version": "1.0.0",
+    "author": "Community",
+    "summary": "A simple rsync-based backup script for your home directory with incremental snapshots.",
+    "description": "Creates compressed, incremental backups of your home directory using rsync. Supports local and network destinations. Runs via cron or manually.",
+    "tags": ["backup", "rsync", "automation"],
+    "license": "MIT"
+  },
+  {
+    "slug": "system-cleanup",
+    "name": "System Cleanup",
+    "category": "script",
+    "version": "1.0.0",
+    "author": "Community",
+    "summary": "Clean up old kernels, package cache, orphaned packages, and temp files safely.",
+    "description": "A careful cleanup script that removes old kernels (keeping the current + 1 previous), clears APT cache, removes orphaned packages, and cleans temp directories. Always confirms before deleting.",
+    "tags": ["cleanup", "maintenance", "space"],
+    "license": "MIT"
+  },
+
+  {
+    "slug": "vimix-grub",
+    "name": "Vimix GRUB",
+    "category": "grub-theme",
+    "version": "2.0.0",
+    "author": "vinceliuice",
+    "summary": "A beautiful, modern GRUB bootloader theme with multiple color variants.",
+    "description": "Vimix GRUB theme replaces the plain text bootloader with a gorgeous graphical menu. Available in blue, dark, and white variants with a clean design.",
+    "tags": ["modern", "vimix", "boot"],
+    "license": "GPL-3.0",
+    "featured": true
+  },
+  {
+    "slug": "tela-grub",
+    "name": "Tela GRUB",
+    "category": "grub-theme",
+    "version": "1.0.0",
+    "author": "vinceliuice",
+    "summary": "A flat, minimal GRUB theme that matches the Tela icon theme family.",
+    "description": "Tela GRUB provides a clean, flat bootloader theme. Pairs well with the Tela icon theme for a consistent look from boot to desktop.",
+    "tags": ["flat", "minimal", "tela", "boot"],
+    "license": "GPL-3.0"
+  },
+
+  {
+    "slug": "mint-plymouth",
+    "name": "Mint Logo Plymouth",
+    "category": "plymouth-theme",
+    "version": "1.0.0",
+    "author": "Linux Mint Team",
+    "summary": "The official Linux Mint boot splash — a clean spinner with the Mint logo.",
+    "description": "The default Plymouth boot splash theme for Linux Mint. Shows the Linux Mint logo with a smooth spinner animation during boot.",
+    "tags": ["official", "mint", "boot-splash"],
+    "license": "GPL-3.0"
+  },
+  {
+    "slug": "vimix-plymouth",
+    "name": "Vimix Plymouth",
+    "category": "plymouth-theme",
+    "version": "1.0.0",
+    "author": "vinceliuice",
+    "summary": "A stylish boot splash theme with a circular progress animation.",
+    "description": "Vimix Plymouth theme shows a modern circular loading animation during boot. Pairs with the Vimix GRUB theme for a seamless boot experience.",
+    "tags": ["modern", "vimix", "boot-splash"],
+    "license": "GPL-3.0"
+  }
+]

@@ -1,0 +1,12 @@
+mint-hub (1.0.0-1) unstable; urgency=low
+
+  * Initial release
+  * Browse, install, and manage 16 categories of enhancements
+  * Cinnamon Spices integration
+  * Built-in malware scanning
+  * Upload studio for publishing enhancements
+  * Local-only mode (no API key required)
+  * Full-text search with FTS5
+  * Favorites and review system
+
+ -- SkinVaults <drmizayt@gmail.com>  Fri, 15 Aug 2026 12:00:00 +0000

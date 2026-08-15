@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	install -d $(DESTDIR)/usr/share/mint-hub
+	install -m644 *.py $(DESTDIR)/usr/share/mint-hub/
+	install -m644 seed_catalog.json $(DESTDIR)/usr/share/mint-hub/
+	install -d $(DESTDIR)/usr/share/mint-hub/data
+	install -m644 data/mint-hub.svg $(DESTDIR)/usr/share/mint-hub/data/
+	install -d $(DESTDIR)/usr/bin
+	printf '#!/bin/bash\nexec python3 /usr/share/mint-hub/mint_hub.py "$$@"\n' > $(DESTDIR)/usr/bin/mint-hub
+	chmod 755 $(DESTDIR)/usr/bin/mint-hub
+	install -d $(DESTDIR)/usr/share/icons/hicolor/scalable/apps
+	install -m644 data/mint-hub.svg $(DESTDIR)/usr/share/icons/hicolor/scalable/apps/mint-hub.svg
+	install -d $(DESTDIR)/usr/share/applications
+	install -m644 data/com.linuxmint.minthub.desktop $(DESTDIR)/usr/share/applications/

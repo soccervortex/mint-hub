@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6BC86B"/>
+      <stop offset="100%" stop-color="#3CA03C"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E0F5E0"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="128" cy="128" r="120" fill="url(#bg)"/>
+  <circle cx="128" cy="128" r="112" fill="none" stroke="#2D8A2D" stroke-width="2" opacity="0.3"/>
+  <!-- Hub gear (outer ring with teeth) -->
+  <g transform="translate(128,128)">
+    <circle r="52" fill="none" stroke="url(#leaf)" stroke-width="8" opacity="0.9"/>
+    <!-- Gear teeth -->
+    <g fill="url(#leaf)" opacity="0.9">
+      <rect x="-6" y="-62" width="12" height="16" rx="3"/>
+      <rect x="-6" y="46" width="12" height="16" rx="3"/>
+      <rect x="-62" y="-6" width="16" height="12" rx="3"/>
+      <rect x="46" y="-6" width="16" height="12" rx="3"/>
+      <rect x="34" y="-46" width="12" height="16" rx="3" transform="rotate(45)"/>
+      <rect x="-46" y="-46" width="12" height="16" rx="3" transform="rotate(-45)"/>
+      <rect x="34" y="30" width="12" height="16" rx="3" transform="rotate(-45)"/>
+      <rect x="-46" y="30" width="12" height="16" rx="3" transform="rotate(45)"/>
+    </g>
+    <!-- Inner hub circle -->
+    <circle r="20" fill="url(#leaf)" opacity="0.9"/>
+    <circle r="8" fill="url(#bg)"/>
+  </g>
+  <!-- Mint leaf (top-right accent) -->
+  <g transform="translate(178,62) rotate(-30)">
+    <path d="M0,0 C-8,-24 8,-42 0,-58 C12,-42 28,-24 20,0 C14,-4 6,-4 0,0Z"
+          fill="#FFFFFF" opacity="0.85"/>
+    <line x1="10" y1="-4" x2="6" y2="-36" stroke="#3CA03C" stroke-width="1.5" opacity="0.5"/>
+  </g>
+  <!-- Second smaller leaf -->
+  <g transform="translate(192,78) rotate(-10)">
+    <path d="M0,0 C-5,-14 5,-26 0,-34 C8,-26 16,-14 12,0 C8,-2 4,-2 0,0Z"
+          fill="#FFFFFF" opacity="0.65"/>
+  </g>
+</svg>
