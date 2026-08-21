@@ -1,5 +1,6 @@
 """Main application window with all pages."""
 
+import logging
 from pathlib import Path
 
 import gi
@@ -7,12 +8,15 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("XApp", "1.0")
 from gi.repository import Gtk, Gdk, GLib, GdkPixbuf, Pango, XApp
 
-from constants import CATEGORIES, CATEGORY_MAP
+log = logging.getLogger("minthub")
+
+from constants import CATEGORIES, CATEGORY_MAP, APP_VERSION
 from enhancement import Enhancement
 from tiles import EnhancementTile, CategoryTile
 from imaging import load_thumbnail_async
 from packager import create_package, validate_manifest, generate_manifest_template
 from safety_scanner import scan_for_upload
+from updater import check_for_update, download_and_install
 
 PAGE_ONBOARDING = "onboarding"
 PAGE_LOADING = "loading"
@@ -34,6 +38,7 @@ class MainWindow:
         self._tile_batch_idx = 0
         self._history = []
         self._detail_enh = None
+        self._pending_update = None
 
     def build(self) -> Gtk.ApplicationWindow:
         self.window = Gtk.ApplicationWindow(application=self.app, title="Linux Mint Hub")
@@ -90,46 +95,141 @@ class MainWindow:
     def _load_css(self):
         css = b"""
         .tile-name { font-weight: bold; font-size: 13px; }
-        .dim-label { opacity: 0.6; font-size: 11px; }
-        .heading { font-size: 18px; font-weight: bold; }
-        .subheading { font-size: 14px; font-weight: 600; }
-        .detail-title { font-size: 22px; font-weight: bold; }
+        .dim-label { opacity: 0.55; font-size: 11px; }
+        .heading { font-size: 20px; font-weight: bold; }
+        .subheading { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .detail-title { font-size: 24px; font-weight: bold; }
         .detail-author { font-size: 13px; opacity: 0.7; }
-        .category-sidebar row { padding: 8px 12px; }
-        .category-sidebar row:selected { background-color: @theme_selected_bg_color; }
-        flowboxchild {
-            border: 1px solid alpha(@theme_fg_color, 0.1);
-            border-radius: 8px;
-            margin: 4px;
+        .detail-meta-key { font-weight: 600; opacity: 0.6; font-size: 12px; }
+        .detail-meta-val { font-size: 12px; }
+
+        .category-sidebar {
+            background: alpha(@theme_fg_color, 0.02);
+        }
+        .category-sidebar row {
+            padding: 10px 14px;
+            border-left: 3px solid transparent;
             transition: all 150ms ease;
         }
-        flowboxchild:hover {
-            border-color: #6BC86B;
-            background: alpha(#6BC86B, 0.06);
-            box-shadow: 0 2px 6px alpha(#000, 0.08);
+        .category-sidebar row:selected {
+            background-color: alpha(#6BC86B, 0.12);
+            border-left-color: #6BC86B;
         }
-        .welcome-title { font-size: 28px; font-weight: bold; }
-        .welcome-subtitle { font-size: 14px; opacity: 0.7; }
-        .stat-value { font-size: 26px; font-weight: bold; color: #4CAF50; }
-        .stat-label { font-size: 11px; opacity: 0.6; }
-        .section-title { font-size: 16px; font-weight: 600; margin-top: 12px; }
-        .cat-count { font-size: 10px; opacity: 0.5; }
-        .toast-bar {
-            background: alpha(@theme_fg_color, 0.85);
-            color: @theme_bg_color;
-            padding: 8px 16px;
-            border-radius: 6px;
-            margin: 8px 24px;
+        .category-sidebar row:hover:not(:selected) {
+            background-color: alpha(@theme_fg_color, 0.04);
         }
-        .toast-success { background: #4CAF50; color: white; }
-        .toast-error { background: #E53935; color: white; }
-        .featured-tile {
-            background: linear-gradient(135deg, alpha(#6BC86B, 0.1), alpha(#4CAF50, 0.05));
-            border: 1px solid alpha(#6BC86B, 0.3);
+
+        flowboxchild {
+            border: 1px solid alpha(@theme_fg_color, 0.08);
             border-radius: 8px;
+            margin: 2px;
+            padding: 1px;
+            transition: all 200ms ease;
+            background: alpha(@theme_fg_color, 0.015);
+        }
+        flowboxchild:hover {
+            border-color: alpha(#6BC86B, 0.5);
+            background: alpha(#6BC86B, 0.06);
+        }
+        flowboxchild:selected {
+            border-color: #6BC86B;
+            background: alpha(#6BC86B, 0.08);
+        }
+
+        .welcome-title { font-size: 22px; font-weight: bold; }
+        .welcome-subtitle { font-size: 13px; opacity: 0.65; }
+        .stat-value { font-size: 22px; font-weight: bold; color: #6BC86B; }
+        .stat-label { font-size: 10px; opacity: 0.55; }
+        .stat-card {
+            border: 1px solid alpha(@theme_fg_color, 0.08);
+            border-radius: 10px;
+            padding: 10px 16px;
+            background: alpha(@theme_fg_color, 0.02);
+        }
+        .section-title { font-size: 16px; font-weight: 600; margin-top: 8px; }
+        .cat-count {
+            font-size: 10px;
+            opacity: 0.4;
+            font-weight: 600;
+        }
+
+        .toast-bar {
+            background: alpha(@theme_fg_color, 0.88);
+            color: @theme_bg_color;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 8px 24px;
+            font-weight: 500;
+        }
+        .toast-success { background: #43A047; color: white; }
+        .toast-error { background: #E53935; color: white; }
+
+        .featured-tile {
+            background: alpha(#6BC86B, 0.06);
+            border: 1px solid alpha(#6BC86B, 0.25);
+            border-radius: 10px;
             padding: 8px;
         }
-        .empty-state { opacity: 0.5; font-size: 14px; }
+        .empty-state {
+            opacity: 0.4;
+            font-size: 14px;
+        }
+
+        .installed-badge {
+            background: #43A047;
+            color: white;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .source-badge {
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .source-spices {
+            background: alpha(#FF9800, 0.15);
+            color: #FF9800;
+        }
+        .source-local {
+            background: alpha(#2196F3, 0.15);
+            color: #2196F3;
+        }
+
+        .update-banner {
+            background: alpha(#6BC86B, 0.1);
+            border: 1px solid alpha(#6BC86B, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+
+        button.suggested-action {
+            background-color: #6BC86B;
+            color: white;
+        }
+        button.suggested-action:hover {
+            background-color: #5BB85B;
+        }
+
+        progressbar trough {
+            min-height: 6px;
+            border-radius: 3px;
+        }
+        progressbar progress {
+            min-height: 6px;
+            border-radius: 3px;
+            background: #6BC86B;
+        }
+
+        frame {
+            border-radius: 8px;
+        }
+        frame > label {
+            font-weight: 600;
+            opacity: 0.8;
+        }
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css)
@@ -267,21 +367,37 @@ class MainWindow:
         home_box.set_margin_start(24)
         home_box.set_margin_end(24)
 
-        stats_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24)
+        stats_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
         stats_box.set_halign(Gtk.Align.CENTER)
         self._stat_widgets = {}
-        for key, label in [("total", "Enhancements"), ("installed", "Installed"), ("categories", "Categories")]:
-            vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-            vbox.set_halign(Gtk.Align.CENTER)
+        for key, label, icon_name in [
+            ("total", "Enhancements", "application-x-addon-symbolic"),
+            ("installed", "Installed", "object-select-symbolic"),
+            ("categories", "Categories", "view-grid-symbolic"),
+        ]:
+            card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+            card.set_halign(Gtk.Align.CENTER)
+            card.get_style_context().add_class("stat-card")
             val = Gtk.Label(label="0")
             val.get_style_context().add_class("stat-value")
-            vbox.pack_start(val, False, False, 0)
+            card.pack_start(val, False, False, 0)
             lbl = Gtk.Label(label=label)
             lbl.get_style_context().add_class("stat-label")
-            vbox.pack_start(lbl, False, False, 0)
-            stats_box.pack_start(vbox, False, False, 16)
+            card.pack_start(lbl, False, False, 0)
+            stats_box.pack_start(card, True, True, 0)
             self._stat_widgets[key] = val
         home_box.pack_start(stats_box, False, False, 8)
+
+        quick_btns = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        quick_btns.set_halign(Gtk.Align.CENTER)
+        browse_all_btn = Gtk.Button(label="Browse All")
+        browse_all_btn.get_style_context().add_class("suggested-action")
+        browse_all_btn.connect("clicked", lambda w: self.navigate_to(PAGE_BROWSE))
+        quick_btns.pack_start(browse_all_btn, False, False, 0)
+        library_btn = Gtk.Button(label="My Library")
+        library_btn.connect("clicked", lambda w: self.navigate_to(PAGE_LIBRARY))
+        quick_btns.pack_start(library_btn, False, False, 0)
+        home_box.pack_start(quick_btns, False, False, 0)
 
         trending_title = Gtk.Label(label="Trending")
         trending_title.set_xalign(0)
@@ -290,9 +406,9 @@ class MainWindow:
 
         trending_scroll = Gtk.ScrolledWindow()
         trending_scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER)
-        trending_scroll.set_size_request(-1, 140)
+        trending_scroll.set_size_request(-1, 110)
         self.trending_flowbox = Gtk.FlowBox()
-        self.trending_flowbox.set_min_children_per_line(2)
+        self.trending_flowbox.set_min_children_per_line(3)
         self.trending_flowbox.set_max_children_per_line(20)
         self.trending_flowbox.set_homogeneous(True)
         self.trending_flowbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
@@ -306,8 +422,8 @@ class MainWindow:
         home_box.pack_start(cat_title, False, False, 0)
 
         self.categories_flowbox = Gtk.FlowBox()
-        self.categories_flowbox.set_min_children_per_line(3)
-        self.categories_flowbox.set_max_children_per_line(6)
+        self.categories_flowbox.set_min_children_per_line(4)
+        self.categories_flowbox.set_max_children_per_line(8)
         self.categories_flowbox.set_homogeneous(True)
         self.categories_flowbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
         self.categories_flowbox.connect("child-activated", self._on_category_tile_activated)
@@ -319,8 +435,8 @@ class MainWindow:
         home_box.pack_start(local_title, False, False, 0)
 
         self.home_installed_flowbox = Gtk.FlowBox()
-        self.home_installed_flowbox.set_min_children_per_line(3)
-        self.home_installed_flowbox.set_max_children_per_line(8)
+        self.home_installed_flowbox.set_min_children_per_line(4)
+        self.home_installed_flowbox.set_max_children_per_line(10)
         self.home_installed_flowbox.set_homogeneous(True)
         self.home_installed_flowbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
         self.home_installed_flowbox.connect("child-activated", self._on_tile_activated)
@@ -372,10 +488,10 @@ class MainWindow:
         browse_scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
 
         self.browse_flowbox = Gtk.FlowBox()
-        self.browse_flowbox.set_min_children_per_line(3)
-        self.browse_flowbox.set_max_children_per_line(8)
-        self.browse_flowbox.set_row_spacing(4)
-        self.browse_flowbox.set_column_spacing(4)
+        self.browse_flowbox.set_min_children_per_line(4)
+        self.browse_flowbox.set_max_children_per_line(10)
+        self.browse_flowbox.set_row_spacing(2)
+        self.browse_flowbox.set_column_spacing(2)
         self.browse_flowbox.set_homogeneous(True)
         self.browse_flowbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
         self.browse_flowbox.connect("child-activated", self._on_tile_activated)
@@ -539,17 +655,25 @@ class MainWindow:
         box.set_margin_start(24)
         box.set_margin_end(24)
 
+        header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
         title = Gtk.Label(label="My Library")
         title.set_xalign(0)
         title.get_style_context().add_class("heading")
-        box.pack_start(title, False, False, 0)
+        header.pack_start(title, True, True, 0)
+        self.library_filter = Gtk.ComboBoxText()
+        for fid, flabel in [("installed", "Installed"), ("favorites", "Favorites"), ("all", "All")]:
+            self.library_filter.append(fid, flabel)
+        self.library_filter.set_active_id("installed")
+        self.library_filter.connect("changed", lambda w: self._refresh_library())
+        header.pack_end(self.library_filter, False, False, 0)
+        box.pack_start(header, False, False, 0)
 
         scroll = Gtk.ScrolledWindow()
         scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
 
         self.library_flowbox = Gtk.FlowBox()
-        self.library_flowbox.set_min_children_per_line(3)
-        self.library_flowbox.set_max_children_per_line(8)
+        self.library_flowbox.set_min_children_per_line(4)
+        self.library_flowbox.set_max_children_per_line(10)
         self.library_flowbox.set_homogeneous(True)
         self.library_flowbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
         self.library_flowbox.connect("child-activated", self._on_tile_activated)
@@ -870,13 +994,35 @@ class MainWindow:
         cache_frame.add(cache_box)
         box.pack_start(cache_frame, False, False, 0)
 
+        update_frame = Gtk.Frame(label="Updates")
+        update_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        update_box.set_margin_top(8)
+        update_box.set_margin_bottom(8)
+        update_box.set_margin_start(12)
+        update_box.set_margin_end(12)
+        self.update_status_label = Gtk.Label(label=f"Current version: {APP_VERSION}")
+        self.update_status_label.set_xalign(0)
+        update_box.pack_start(self.update_status_label, False, False, 0)
+        btn_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        self.check_update_btn = Gtk.Button(label="Check for Updates")
+        self.check_update_btn.connect("clicked", self._on_check_update)
+        btn_row.pack_start(self.check_update_btn, False, False, 0)
+        self.install_update_btn = Gtk.Button(label="Install Update")
+        self.install_update_btn.get_style_context().add_class("suggested-action")
+        self.install_update_btn.set_visible(False)
+        self.install_update_btn.connect("clicked", self._on_install_update)
+        btn_row.pack_start(self.install_update_btn, False, False, 0)
+        update_box.pack_start(btn_row, False, False, 0)
+        update_frame.add(update_box)
+        box.pack_start(update_frame, False, False, 0)
+
         about_frame = Gtk.Frame(label="About")
         about_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         about_box.set_margin_top(8)
         about_box.set_margin_bottom(8)
         about_box.set_margin_start(12)
         about_box.set_margin_end(12)
-        about_box.pack_start(Gtk.Label(label="Linux Mint Hub v1.0.0"), False, False, 0)
+        about_box.pack_start(Gtk.Label(label=f"Linux Mint Hub v{APP_VERSION}"), False, False, 0)
         about_box.pack_start(Gtk.Label(label="Enhancement Hub for Linux Mint"), False, False, 0)
         about_box.pack_start(Gtk.Label(label="Browse, install, and manage themes, icons, wallpapers & more"), False, False, 0)
         about_frame.add(about_box)
@@ -886,12 +1032,15 @@ class MainWindow:
 
     # --- Navigation ---
 
+    _NON_HISTORY_PAGES = {PAGE_ONBOARDING, PAGE_LOADING}
+
     def navigate_to(self, page: str, data=None):
         current = self.stack.get_visible_child_name()
-        if current and current != page:
+        if current and current != page and current not in self._NON_HISTORY_PAGES:
             self._history.append(current)
         self.stack.set_visible_child_name(page)
-        self.back_btn.set_visible(bool(self._history))
+        self.back_btn.set_visible(
+            any(p not in self._NON_HISTORY_PAGES for p in self._history))
         if page == PAGE_DETAILS and data:
             self._show_detail(data)
         elif page == PAGE_BROWSE:
@@ -902,10 +1051,13 @@ class MainWindow:
             self._refresh_home()
 
     def _on_back(self, widget):
-        if self._history:
+        while self._history:
             page = self._history.pop()
-            self.stack.set_visible_child_name(page)
-            self.back_btn.set_visible(bool(self._history))
+            if page not in self._NON_HISTORY_PAGES:
+                self.stack.set_visible_child_name(page)
+                break
+        self.back_btn.set_visible(
+            any(p not in self._NON_HISTORY_PAGES for p in self._history))
 
     # --- Home page ---
 
@@ -1021,12 +1173,14 @@ class MainWindow:
         ]
         for i, (key, val) in enumerate(meta_rows):
             k = Gtk.Label(label=key)
-            k.set_xalign(0)
-            k.get_style_context().add_class("dim-label")
+            k.set_xalign(1)
+            k.get_style_context().add_class("detail-meta-key")
+            k.set_margin_end(8)
             v = Gtk.Label(label=val)
             v.set_xalign(0)
             v.set_selectable(True)
             v.set_ellipsize(Pango.EllipsizeMode.END)
+            v.get_style_context().add_class("detail-meta-val")
             self.detail_meta_grid.attach(k, 0, i, 1, 1)
             self.detail_meta_grid.attach(v, 1, i, 1, 1)
         self.detail_meta_grid.show_all()
@@ -1068,9 +1222,18 @@ class MainWindow:
     def _refresh_library(self):
         for child in self.library_flowbox.get_children():
             self.library_flowbox.remove(child)
-        items = self.app.cache.get_all(installed=True, limit=500)
+        active_filter = self.library_filter.get_active_id() or "installed"
+        if active_filter == "favorites":
+            items = self.app.cache.get_favorites()
+            empty_text = "No favorites yet — add some from the browse page!"
+        elif active_filter == "all":
+            items = self.app.cache.get_all(limit=500)
+            empty_text = "No enhancements found"
+        else:
+            items = self.app.cache.get_all(installed=True, limit=500)
+            empty_text = "No installed enhancements found"
         if not items:
-            empty = Gtk.Label(label="No installed enhancements found")
+            empty = Gtk.Label(label=empty_text)
             empty.get_style_context().add_class("empty-state")
             empty.set_margin_top(40)
             self.library_flowbox.add(empty)
@@ -1087,7 +1250,14 @@ class MainWindow:
     def _on_category_tile_activated(self, flowbox, child):
         if isinstance(child, CategoryTile):
             self._current_category = child.cat_id
+            self._sync_sidebar_to_category()
             self.navigate_to(PAGE_BROWSE)
+
+    def _sync_sidebar_to_category(self):
+        for row in self.category_listbox.get_children():
+            if getattr(row, "_cat_id", None) == self._current_category:
+                self.category_listbox.select_row(row)
+                return
 
     def _on_sidebar_category_selected(self, listbox, row):
         if row:
@@ -1158,25 +1328,33 @@ class MainWindow:
         @_async
         def do_install():
             try:
-                result = self.app.api.download(enh.slug)
-                url = result.get("url", "")
+                url = enh.download_url
+                if not url and self.app.api:
+                    try:
+                        result = self.app.api.download(enh.slug)
+                        url = result.get("url", "") if isinstance(result, dict) else ""
+                    except Exception as api_err:
+                        log.warning(f"API download failed for {enh.slug}: {api_err}")
+                        GLib.idle_add(self._install_done, False, "Marketplace server is unavailable.")
+                        return
                 if not url:
-                    GLib.idle_add(self._install_done, False)
+                    GLib.idle_add(self._install_done, False, "No download available for this item.")
                     return
                 def progress(frac):
                     GLib.idle_add(self.progress_bar.set_fraction, frac)
                 success = self.app.installer.install_from_url(enh, url, progress)
-                GLib.idle_add(self._install_done, success)
+                GLib.idle_add(self._install_done, success, "")
             except Exception as e:
-                print(f"Install error: {e}")
-                GLib.idle_add(self._install_done, False)
+                log.warning(f"Install failed for {enh.slug}: {e}")
+                GLib.idle_add(self._install_done, False, f"Installation failed: {e}")
         do_install()
 
-    def _install_done(self, success):
+    def _install_done(self, success, error_msg=""):
         self.install_btn.set_sensitive(True)
         self.install_btn.set_label("Install")
         self.progress_revealer.set_reveal_child(False)
         if success and self._detail_enh:
+            self.show_toast(f"{self._detail_enh.name} installed successfully!", "success")
             self._show_detail(self._detail_enh)
         elif not success:
             scan = self.app.installer.last_scan_result
@@ -1192,23 +1370,18 @@ class MainWindow:
                 dialog.run()
                 dialog.destroy()
             else:
-                dialog = Gtk.MessageDialog(
-                    transient_for=self.window,
-                    modal=True,
-                    message_type=Gtk.MessageType.ERROR,
-                    buttons=Gtk.ButtonsType.OK,
-                    text="Installation Failed",
-                )
-                dialog.format_secondary_text("The enhancement could not be installed. Check your internet connection and try again.")
-                dialog.run()
-                dialog.destroy()
+                msg = error_msg or "Installation failed. Check your internet connection."
+                self.show_toast(msg, "error", 4000)
 
     def _on_apply_clicked(self, widget):
         if not self._detail_enh:
             return
         success = self.app.applier.apply(self._detail_enh)
         if success:
+            self.show_toast(f"{self._detail_enh.name} applied!", "success")
             self._show_detail(self._detail_enh)
+        else:
+            self.show_toast("Failed to apply enhancement", "error")
 
     def _on_revert_clicked(self, widget):
         if not self._detail_enh:
@@ -1234,12 +1407,16 @@ class MainWindow:
         if response == Gtk.ResponseType.YES:
             success = self.app.installer.uninstall(self._detail_enh)
             if success:
+                self.show_toast(f"{self._detail_enh.name} uninstalled", "success")
                 self._show_detail(self._detail_enh)
+            else:
+                self.show_toast("Failed to uninstall", "error")
 
     def _on_save_key(self, widget):
         key = self.settings_key_entry.get_text().strip()
         if key:
             self.app.save_key(key)
+            self.show_toast("API key saved", "success")
 
     def _on_clear_cache(self, widget):
         from imaging import clear_cache
@@ -1249,6 +1426,83 @@ class MainWindow:
         if THUMBNAIL_CACHE_DIR.exists():
             shutil.rmtree(THUMBNAIL_CACHE_DIR)
             THUMBNAIL_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        self.show_toast("Thumbnail cache cleared", "success")
+
+    def _on_check_update(self, widget):
+        self.check_update_btn.set_sensitive(False)
+        self.check_update_btn.set_label("Checking...")
+        self._pending_update = None
+        from threading_utils import _async
+        @_async
+        def do_check():
+            info = check_for_update()
+            GLib.idle_add(self._update_check_done, info)
+        do_check()
+
+    def _update_check_done(self, info):
+        self.check_update_btn.set_sensitive(True)
+        self.check_update_btn.set_label("Check for Updates")
+        if info and info.get("url"):
+            self._pending_update = info
+            self.update_status_label.set_text(
+                f"Update available: v{info['version']} (current: v{info['current']})")
+            self.install_update_btn.set_visible(True)
+            self.install_update_btn.show()
+            self.show_toast(f"Update v{info['version']} available!", "success")
+        elif info:
+            self.update_status_label.set_text(
+                f"v{info['version']} available but no .deb found")
+            self.install_update_btn.set_visible(False)
+        else:
+            self.update_status_label.set_text(
+                f"Current version: {APP_VERSION} (up to date)")
+            self.install_update_btn.set_visible(False)
+            self.show_toast("You're running the latest version", "success")
+
+    def _on_install_update(self, widget):
+        if not self._pending_update:
+            return
+        url = self._pending_update["url"]
+        self.install_update_btn.set_sensitive(False)
+        self.install_update_btn.set_label("Downloading...")
+        self.progress_revealer.set_reveal_child(True)
+        self.progress_bar.set_text("Downloading update...")
+        from threading_utils import _async
+        @_async
+        def do_update():
+            def progress(frac):
+                GLib.idle_add(self.progress_bar.set_fraction, frac)
+            success, msg = download_and_install(url, progress)
+            GLib.idle_add(self._update_install_done, success, msg)
+        do_update()
+
+    def _update_install_done(self, success, msg):
+        self.install_update_btn.set_sensitive(True)
+        self.install_update_btn.set_label("Install Update")
+        self.progress_revealer.set_reveal_child(False)
+        if success:
+            self.show_toast(msg, "success", 5000)
+            self.update_status_label.set_text("Update installed! Please restart the app.")
+            self.install_update_btn.set_visible(False)
+        else:
+            self.show_toast(msg, "error", 5000)
+
+    def check_update_on_startup(self):
+        from threading_utils import _async
+        @_async
+        def do_check():
+            info = check_for_update()
+            if info and info.get("url"):
+                GLib.idle_add(self._startup_update_notify, info)
+        do_check()
+
+    def _startup_update_notify(self, info):
+        self._pending_update = info
+        self.update_status_label.set_text(
+            f"Update available: v{info['version']} (current: v{info['current']})")
+        self.install_update_btn.set_visible(True)
+        self.install_update_btn.show()
+        self.show_toast(f"Update v{info['version']} is available! Go to Settings to install.", "info", 5000)
 
     def show_progress(self, text: str, fraction: float):
         self.progress_bar.set_text(text)

@@ -146,6 +146,7 @@ class MintHubApp(Gtk.Application):
 
     def _init_done(self):
         self.main_window.navigate_to(PAGE_HOME)
+        self.main_window.check_update_on_startup()
 
     @_async
     def refresh_catalog(self):

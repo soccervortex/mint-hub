@@ -1,10 +1,12 @@
 """Download, extract, install, and uninstall enhancements."""
 
+import logging
 import os
 import shutil
 import subprocess
 import tarfile
 import tempfile
+import zipfile
 from pathlib import Path
 
 import requests
@@ -13,6 +15,8 @@ from constants import INSTALL_PATHS, CACHE_DIR, DOWNLOAD_DIR, THUMBNAIL_CACHE_DI
 from enhancement import Enhancement
 from local_cache import LocalCache
 from safety_scanner import scan_archive, ScanResult
+
+log = logging.getLogger("minthub")
 
 
 class EnhancementInstaller:
@@ -28,7 +32,8 @@ class EnhancementInstaller:
 
     def install_from_url(self, enh: Enhancement, download_url: str,
                          progress_cb=None) -> bool:
-        archive_path = DOWNLOAD_DIR / f"{enh.slug}.tar.gz"
+        suffix = ".zip" if download_url.endswith(".zip") else ".tar.gz"
+        archive_path = DOWNLOAD_DIR / f"{enh.slug}{suffix}"
         try:
             resp = requests.get(download_url, stream=True, timeout=120)
             resp.raise_for_status()
@@ -43,12 +48,12 @@ class EnhancementInstaller:
             scan = scan_archive(str(archive_path))
             if not scan.safe:
                 self._last_scan = scan
-                print(f"Safety scan BLOCKED install of {enh.slug}:\n{scan.summary}")
+                log.warning(f"Safety scan BLOCKED install of {enh.slug}:\n{scan.summary}")
                 return False
             self._last_scan = scan
             return self.install_from_archive(enh, archive_path)
         except Exception as e:
-            print(f"Install failed for {enh.slug}: {e}")
+            log.warning(f"Install failed for {enh.slug}: {e}")
             return False
         finally:
             if archive_path.exists():
@@ -63,10 +68,14 @@ class EnhancementInstaller:
 
         with tempfile.TemporaryDirectory() as tmpdir:
             try:
-                with tarfile.open(archive_path, "r:gz") as tar:
-                    tar.extractall(tmpdir, filter="data")
+                if zipfile.is_zipfile(str(archive_path)):
+                    with zipfile.ZipFile(archive_path, "r") as zf:
+                        zf.extractall(tmpdir)
+                else:
+                    with tarfile.open(archive_path, "r:*") as tar:
+                        tar.extractall(tmpdir, filter="data")
             except Exception as e:
-                print(f"Extract failed: {e}")
+                log.warning(f"Extract failed: {e}")
                 return False
 
             tmp = Path(tmpdir)
@@ -96,7 +105,7 @@ class EnhancementInstaller:
             self._post_install(enh)
             return True
         except Exception as e:
-            print(f"Copy failed: {e}")
+            log.warning(f"Copy failed: {e}")
             return False
 
     def _install_wallpapers(self, enh: Enhancement, source: Path, base_dir: Path) -> bool:
@@ -155,7 +164,7 @@ class EnhancementInstaller:
             enh.installed_version = ""
             return True
         except Exception as e:
-            print(f"Uninstall failed: {e}")
+            log.warning(f"Uninstall failed: {e}")
             return False
 
     def download_thumbnail(self, url: str, slug: str) -> str:

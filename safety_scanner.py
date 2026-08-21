@@ -28,6 +28,7 @@ import os
 import re
 import stat
 import tarfile
+import zipfile
 from collections import Counter
 from pathlib import Path
 
@@ -424,26 +425,40 @@ def scan_archive(archive_path: str) -> ScanResult:
         result.add_blocker("Size limit", f"Archive too large: {archive_size / 1_000_000:.1f} MB")
         return result
 
-    try:
-        with tarfile.open(str(path), "r:*") as tar:
-            members = tar.getmembers()
-
-            if len(members) > MAX_ARCHIVE_FILES:
-                result.add_blocker("Archive bomb",
-                                   f"Too many files: {len(members)} (max {MAX_ARCHIVE_FILES})")
-                return result
-
-            total_uncompressed = sum(m.size for m in members if m.isfile())
-            if archive_size > 0 and total_uncompressed / archive_size > MAX_COMPRESSION_RATIO:
-                result.add_blocker("Archive bomb",
-                                   f"Compression ratio {total_uncompressed / archive_size:.0f}:1 "
-                                   f"exceeds limit of {MAX_COMPRESSION_RATIO}:1")
-                return result
-
-            _scan_tar_members(tar, members, result)
-
-    except tarfile.TarError as e:
-        result.add_blocker("Archive error", f"Cannot read archive: {e}")
+    if zipfile.is_zipfile(str(path)):
+        try:
+            with zipfile.ZipFile(str(path), "r") as zf:
+                infos = zf.infolist()
+                if len(infos) > MAX_ARCHIVE_FILES:
+                    result.add_blocker("Archive bomb",
+                                       f"Too many files: {len(infos)} (max {MAX_ARCHIVE_FILES})")
+                    return result
+                total_uncompressed = sum(i.file_size for i in infos)
+                if archive_size > 0 and total_uncompressed / archive_size > MAX_COMPRESSION_RATIO:
+                    result.add_blocker("Archive bomb",
+                                       f"Compression ratio {total_uncompressed / archive_size:.0f}:1 "
+                                       f"exceeds limit of {MAX_COMPRESSION_RATIO}:1")
+                    return result
+                _scan_zip_members(zf, infos, result)
+        except zipfile.BadZipFile as e:
+            result.add_blocker("Archive error", f"Cannot read zip: {e}")
+    else:
+        try:
+            with tarfile.open(str(path), "r:*") as tar:
+                members = tar.getmembers()
+                if len(members) > MAX_ARCHIVE_FILES:
+                    result.add_blocker("Archive bomb",
+                                       f"Too many files: {len(members)} (max {MAX_ARCHIVE_FILES})")
+                    return result
+                total_uncompressed = sum(m.size for m in members if m.isfile())
+                if archive_size > 0 and total_uncompressed / archive_size > MAX_COMPRESSION_RATIO:
+                    result.add_blocker("Archive bomb",
+                                       f"Compression ratio {total_uncompressed / archive_size:.0f}:1 "
+                                       f"exceeds limit of {MAX_COMPRESSION_RATIO}:1")
+                    return result
+                _scan_tar_members(tar, members, result)
+        except tarfile.TarError as e:
+            result.add_blocker("Archive error", f"Cannot read archive: {e}")
 
     return result
 
@@ -558,6 +573,30 @@ def _scan_tar_members(tar: tarfile.TarFile, members: list, result: ScanResult):
                         _check_content_bytes(content, name, result)
                 except Exception:
                     pass
+
+
+def _scan_zip_members(zf: zipfile.ZipFile, infos: list, result: ScanResult):
+    for info in infos:
+        name = info.filename
+        if info.is_dir():
+            continue
+        if name.startswith("/"):
+            result.add_blocker("Path traversal", "Absolute path in archive", name)
+            continue
+        if ".." in name.split("/"):
+            result.add_blocker("Path traversal", "Parent directory escape", name)
+            continue
+        normalized = os.path.normpath(name)
+        if normalized.startswith(".."):
+            result.add_blocker("Path traversal", "Normalized path escapes archive", name)
+            continue
+        _check_file_name(name, result)
+        if info.file_size <= MAX_FILE_SCAN_SIZE:
+            try:
+                content = zf.read(info)
+                _check_content_bytes(content, name, result)
+            except Exception:
+                pass
 
 
 def _check_symlink(path: Path, rel: str, result: ScanResult):

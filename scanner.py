@@ -11,6 +11,7 @@ from gi.repository import Gio
 
 from constants import SCAN_PATHS, GSETTINGS_MAP, IMAGE_EXTENSIONS, FONT_EXTENSIONS
 from enhancement import Enhancement
+from imaging import make_font_preview
 
 
 class LocalScanner:
@@ -236,13 +237,6 @@ class LocalScanner:
             p = theme_dir / name
             if p.exists():
                 return str(p)
-        cursors_dir = theme_dir / "cursors"
-        if not cursors_dir.is_dir():
-            return ""
-        for name in ("thumbnail", "left_ptr", "default", "arrow"):
-            candidate = cursors_dir / name
-            if candidate.exists() and candidate.stat().st_size > 0:
-                return str(candidate)
         return ""
 
     def _scan_fonts(self) -> list:
@@ -258,10 +252,12 @@ class LocalScanner:
                         if family in seen:
                             continue
                         seen.add(family)
+                        thumb = make_font_preview(str(f))
                         results.append(Enhancement.from_local(
                             name=family,
                             category="font",
                             path=str(f),
+                            thumbnail_local=thumb,
                             writable=os.access(str(f), os.W_OK),
                         ))
             except PermissionError:

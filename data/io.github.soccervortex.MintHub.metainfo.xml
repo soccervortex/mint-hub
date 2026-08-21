@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.soccervortex.MintHub</id>
+
+  <name>Linux Mint Hub</name>
+  <summary>Browse, install, and manage Linux Mint enhancements</summary>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+
+  <developer id="io.github.soccervortex">
+    <name>SkinVaults</name>
+  </developer>
+
+  <description>
+    <p>
+      Linux Mint Hub is a native GTK3 desktop application for browsing, installing,
+      and managing Linux Mint enhancements. It provides a unified interface for
+      discovering and applying themes, icons, cursors, wallpapers, applets,
+      extensions, desklets, fonts, and more.
+    </p>
+    <p>Features:</p>
+    <ul>
+      <li>Browse 1500+ enhancements across 16 categories</li>
+      <li>Install directly from Cinnamon Spices and the Mint Hub marketplace</li>
+      <li>Scan and manage locally installed themes, icons, and fonts</li>
+      <li>Built-in malware scanning for safe installations</li>
+      <li>Apply themes, icons, and cursors with one click</li>
+      <li>Search, filter, and sort enhancements</li>
+      <li>Rate and review community contributions</li>
+      <li>Works offline with local-only mode</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">io.github.soccervortex.MintHub.desktop</launchable>
+
+  <url type="homepage">https://github.com/soccervortex/mint-hub</url>
+  <url type="bugtracker">https://github.com/soccervortex/mint-hub/issues</url>
+  <url type="vcs-browser">https://github.com/soccervortex/mint-hub</url>
+
+  <content_rating type="oars-1.1" />
+
+  <branding>
+    <color type="primary" scheme_preference="light">#6BC86B</color>
+    <color type="primary" scheme_preference="dark">#2d5a2d</color>
+  </branding>
+
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+
+  <requires>
+    <display_length compare="ge">768</display_length>
+  </requires>
+
+  <releases>
+    <release version="1.0.0" date="2026-08-15">
+      <description>
+        <p>Initial release of Linux Mint Hub with full feature set:</p>
+        <ul>
+          <li>Browse and install from Cinnamon Spices and Mint Hub marketplace</li>
+          <li>16 enhancement categories with local scanning</li>
+          <li>Built-in malware scanning and safety checks</li>
+          <li>One-click theme and icon application</li>
+          <li>Favorites, reviews, and collections</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>Browse trending enhancements on the home page</caption>
+      <image>https://raw.githubusercontent.com/soccervortex/mint-hub/main/screenshots/home.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Browse and filter enhancements by category</caption>
+      <image>https://raw.githubusercontent.com/soccervortex/mint-hub/main/screenshots/browse.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>View enhancement details and install</caption>
+      <image>https://raw.githubusercontent.com/soccervortex/mint-hub/main/screenshots/detail.png</image>
+    </screenshot>
+  </screenshots>
+</component>

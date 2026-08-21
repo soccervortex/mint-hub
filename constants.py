@@ -58,7 +58,7 @@ GSETTINGS_MAP = {
 CATEGORIES = [
     {"id": "gtk-theme",       "label": "GTK Themes",          "icon": "cs-themes"},
     {"id": "cinnamon-theme",  "label": "Cinnamon Themes",     "icon": "cs-themes"},
-    {"id": "icon-theme",      "label": "Icon Themes",         "icon": "cs-icons"},
+    {"id": "icon-theme",      "label": "Icon Themes",         "icon": "preferences-desktop-icons"},
     {"id": "cursor-theme",    "label": "Cursor Themes",       "icon": "input-mouse"},
     {"id": "wallpaper",       "label": "Wallpapers",          "icon": "cs-backgrounds"},
     {"id": "wallpaper-pack",  "label": "Wallpaper Packs",     "icon": "cs-backgrounds"},

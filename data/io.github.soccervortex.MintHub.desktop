@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Linux Mint Hub
+Comment=Browse, install, and manage Linux Mint enhancements
+Exec=mint-hub
+Icon=io.github.soccervortex.MintHub
+Terminal=false
+Type=Application
+Categories=Settings;DesktopSettings;GTK;
+Keywords=theme;icon;cursor;wallpaper;applet;extension;desklet;font;customization;mint;
+StartupNotify=true
