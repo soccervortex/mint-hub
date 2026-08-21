@@ -69,6 +69,7 @@ modules:
       - install -Dm644 data/io.github.soccervortex.MintHub.desktop ${FLATPAK_DEST}/share/applications/io.github.soccervortex.MintHub.desktop
       - install -Dm644 data/mint-hub.svg ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/io.github.soccervortex.MintHub.svg
       - install -Dm644 data/io.github.soccervortex.MintHub.metainfo.xml ${FLATPAK_DEST}/share/metainfo/io.github.soccervortex.MintHub.metainfo.xml
+      - install -Dm644 COPYING ${FLATPAK_DEST}/share/licenses/io.github.soccervortex.MintHub/COPYING
     sources:
       - type: dir
         path: .
