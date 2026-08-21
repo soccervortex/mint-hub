@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.soccervortex.MintHub</id>
+  <id>io.github.soccervortex.mint-hub</id>
 
   <name>Linux Mint Hub</name>
   <summary>Browse, install, and manage Linux Mint enhancements</summary>
@@ -32,7 +32,7 @@
     </ul>
   </description>
 
-  <launchable type="desktop-id">io.github.soccervortex.MintHub.desktop</launchable>
+  <launchable type="desktop-id">io.github.soccervortex.mint-hub.desktop</launchable>
 
   <url type="homepage">https://github.com/soccervortex/mint-hub</url>
   <url type="bugtracker">https://github.com/soccervortex/mint-hub/issues</url>

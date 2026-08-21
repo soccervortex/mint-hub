@@ -2,7 +2,7 @@
 Name=Linux Mint Hub
 Comment=Browse, install, and manage Linux Mint enhancements
 Exec=mint-hub
-Icon=io.github.soccervortex.MintHub
+Icon=io.github.soccervortex.mint-hub
 Terminal=false
 Type=Application
 Categories=Settings;DesktopSettings;GTK;
