@@ -1,3 +1,12 @@
+mint-hub (1.0.1-1) unstable; urgency=medium
+
+  * Align application, desktop, icon, and package IDs
+  * Remove unused XApp dependency
+  * Fix GitHub update-check repository URL
+  * Correct Debian package ownership and metadata installation
+
+ -- SkinVaults <drmizayt@gmail.com>  Tue, 01 Sep 2026 15:55:00 +0000
+
 mint-hub (1.0.0-1) unstable; urgency=low
 
   * Initial release

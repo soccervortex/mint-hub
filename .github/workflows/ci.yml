@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install validation dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y appstream desktop-file-utils python3-gi python3-requests gir1.2-gtk-3.0
+
+      - name: Check Python sources
+        run: |
+          python3 -m compileall -q .
+          python3 -c "from application import MintHubApp; assert MintHubApp().get_application_id() == 'io.github.soccervortex.mint-hub'"
+
+      - name: Validate desktop metadata
+        run: |
+          desktop-file-validate data/io.github.soccervortex.mint-hub.desktop
+          appstreamcli validate --pedantic data/io.github.soccervortex.mint-hub.metainfo.xml
+
+      - name: Build and inspect Debian package
+        run: |
+          ./build-deb.sh
+          test "$(dpkg-deb -f mint-hub_1.0.1_all.deb Package)" = "mint-hub"
+          test "$(dpkg-deb -f mint-hub_1.0.1_all.deb Version)" = "1.0.1"
+          dpkg-deb -c mint-hub_1.0.1_all.deb | grep -q 'usr/share/applications/io.github.soccervortex.mint-hub.desktop'
+          dpkg-deb -c mint-hub_1.0.1_all.deb | grep -q 'usr/share/icons/hicolor/scalable/apps/io.github.soccervortex.mint-hub.svg'
+          dpkg-deb -c mint-hub_1.0.1_all.deb | grep -q 'usr/share/metainfo/io.github.soccervortex.mint-hub.metainfo.xml'

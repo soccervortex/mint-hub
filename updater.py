@@ -12,7 +12,7 @@ from constants import APP_VERSION
 
 log = logging.getLogger("minthub")
 
-GITHUB_REPO = "soccervortex/linux-mint-hub"
+GITHUB_REPO = "soccervortex/mint-hub"
 RELEASES_URL = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest"
 
 

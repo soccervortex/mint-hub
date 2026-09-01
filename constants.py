@@ -1,9 +1,9 @@
 import os
 from pathlib import Path
 
-APP_ID = "com.linuxmint.minthub"
+APP_ID = "io.github.soccervortex.mint-hub"
 APP_NAME = "Linux Mint Hub"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.0.1"
 API_SLUG = "mint-hub"
 
 OMNISTREAM_BASE = "https://grid.skinvaults.online"

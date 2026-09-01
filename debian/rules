@@ -13,6 +13,6 @@ override_dh_auto_install:
 	printf '#!/bin/bash\nexec python3 /usr/share/mint-hub/mint_hub.py "$$@"\n' > $(DESTDIR)/usr/bin/mint-hub
 	chmod 755 $(DESTDIR)/usr/bin/mint-hub
 	install -d $(DESTDIR)/usr/share/icons/hicolor/scalable/apps
-	install -m644 data/mint-hub.svg $(DESTDIR)/usr/share/icons/hicolor/scalable/apps/mint-hub.svg
+	install -m644 data/mint-hub.svg $(DESTDIR)/usr/share/icons/hicolor/scalable/apps/io.github.soccervortex.mint-hub.svg
 	install -d $(DESTDIR)/usr/share/applications
-	install -m644 data/com.linuxmint.minthub.desktop $(DESTDIR)/usr/share/applications/
+	install -m644 data/io.github.soccervortex.mint-hub.desktop $(DESTDIR)/usr/share/applications/

@@ -55,6 +55,17 @@
   </requires>
 
   <releases>
+    <release version="1.0.1" date="2026-09-01">
+      <description>
+        <p>Packaging and application identity fixes:</p>
+        <ul>
+          <li>Use the io.github.soccervortex.mint-hub application ID consistently</li>
+          <li>Remove an unused XApp runtime dependency</li>
+          <li>Fix GitHub release update checks</li>
+          <li>Install native package metadata and icons under the correct IDs</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.0" date="2026-08-15">
       <description>
         <p>Initial release of Linux Mint Hub with full feature set:</p>

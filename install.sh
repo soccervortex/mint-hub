@@ -19,19 +19,16 @@ install -m644 data/mint-hub.svg "$SHAREDIR/data/"
 
 # Install launcher script
 install -d "$BINDIR"
-cat > "$BINDIR/mint-hub" << 'LAUNCHER'
-#!/bin/bash
-exec python3 /usr/local/share/mint-hub/mint_hub.py "$@"
-LAUNCHER
+printf '#!/bin/bash\nexec python3 \"%s/mint_hub.py\" \"$@\"\n' "$SHAREDIR" > "$BINDIR/mint-hub"
 chmod 755 "$BINDIR/mint-hub"
 
 # Install icons
 install -d "$ICONDIR/scalable/apps"
-install -m644 data/mint-hub.svg "$ICONDIR/scalable/apps/mint-hub.svg"
+install -m644 data/mint-hub.svg "$ICONDIR/scalable/apps/io.github.soccervortex.mint-hub.svg"
 
 # Install .desktop file
 install -d "$APPDIR"
-install -m644 data/com.linuxmint.minthub.desktop "$APPDIR/"
+install -m644 data/io.github.soccervortex.mint-hub.desktop "$APPDIR/"
 
 # Update icon cache
 gtk-update-icon-cache -f "$ICONDIR" 2>/dev/null || true

@@ -23,7 +23,7 @@
 git clone https://github.com/soccervortex/mint-hub.git
 cd mint-hub
 ./build-deb.sh
-sudo dpkg -i mint-hub_1.0.0_all.deb
+sudo dpkg -i mint-hub_1.0.1_all.deb
 ```
 
 If you're missing dependencies:
@@ -56,12 +56,11 @@ python3 mint_hub.py
 
 - Python 3.8+
 - GTK 3.0 (`python3-gi`, `gir1.2-gtk-3.0`)
-- XApp (`gir1.2-xapp-1.0`)
 - Requests (`python3-requests`)
 
 On Linux Mint / Ubuntu:
 ```bash
-sudo apt install python3-gi python3-requests gir1.2-gtk-3.0 gir1.2-xapp-1.0
+sudo apt install python3-gi python3-requests gir1.2-gtk-3.0
 ```
 
 ## Usage
@@ -139,7 +138,7 @@ mint-hub/
 ├── uninstall.sh         # Manual uninstall script
 ├── data/
 │   ├── mint-hub.svg                        # App icon
-│   └── com.linuxmint.minthub.desktop       # Desktop entry
+│   └── io.github.soccervortex.mint-hub.desktop  # Desktop entry
 └── debian/                                  # Debian packaging
     ├── control
     ├── changelog

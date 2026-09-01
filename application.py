@@ -7,8 +7,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import gi
 gi.require_version("Gtk", "3.0")
-gi.require_version("XApp", "1.0")
-from gi.repository import Gtk, Gio, GLib, XApp
+from gi.repository import Gtk, Gio, GLib
 
 from constants import (
     APP_ID, APP_NAME, APP_VERSION, CONFIG_DIR, CONFIG_FILE,

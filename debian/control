@@ -12,7 +12,6 @@ Depends: python3 (>= 3.8),
          python3-gi,
          python3-requests,
          gir1.2-gtk-3.0,
-         gir1.2-xapp-1.0,
          ${misc:Depends}
 Description: Enhancement Hub for Linux Mint
  Linux Mint Hub is a native GTK3 desktop application for browsing,
