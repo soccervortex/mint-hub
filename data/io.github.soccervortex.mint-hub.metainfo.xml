@@ -60,7 +60,7 @@
         <p>Packaging and application identity fixes:</p>
         <ul>
           <li>Use the io.github.soccervortex.mint-hub application ID consistently</li>
-          <li>Remove an unused XApp runtime dependency</li>
+          <li>Remove an unused XApp dependency and declare the required Pycairo dependency</li>
           <li>Fix GitHub release update checks</li>
           <li>Install native package metadata and icons under the correct IDs</li>
         </ul>

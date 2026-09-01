@@ -56,11 +56,12 @@ python3 mint_hub.py
 
 - Python 3.8+
 - GTK 3.0 (`python3-gi`, `gir1.2-gtk-3.0`)
+- Pycairo (`python3-cairo`)
 - Requests (`python3-requests`)
 
 On Linux Mint / Ubuntu:
 ```bash
-sudo apt install python3-gi python3-requests gir1.2-gtk-3.0
+sudo apt install python3-gi python3-cairo python3-requests gir1.2-gtk-3.0
 ```
 
 ## Usage

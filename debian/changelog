@@ -1,7 +1,7 @@
 mint-hub (1.0.1-1) unstable; urgency=medium
 
   * Align application, desktop, icon, and package IDs
-  * Remove unused XApp dependency
+  * Remove unused XApp dependency and declare the required Pycairo dependency
   * Fix GitHub update-check repository URL
   * Correct Debian package ownership and metadata installation
 

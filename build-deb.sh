@@ -22,7 +22,7 @@ Package: mint-hub
 Version: ${VERSION}
 Architecture: all
 Maintainer: SkinVaults <drmizayt@gmail.com>
-Depends: python3 (>= 3.8), python3-gi, python3-requests, gir1.2-gtk-3.0
+Depends: python3 (>= 3.8), python3-gi, python3-cairo, python3-requests, gir1.2-gtk-3.0
 Section: utils
 Priority: optional
 Homepage: https://github.com/soccervortex/mint-hub
